@@ -25,35 +25,40 @@ consumer.unsubscribe();
 ### QueueManager
 Provide basic functions to get queue:
 ```
+// create queue and handle it in map by key
 std::shared_ptr<QueueHandler<Value>> create_queue(
             const Key& key,
             unsigned int max_size=0,
-            const IQueuePolicyFactory<Value>& factory = QueueMultiPolicyFactory<Value>()) // create queue and handle it in map by key
+            const IQueuePolicyFactory<Value>& factory = QueueMultiPolicyFactory<Value>())
 
-void delete_queue(const Key& key) // manual delete queue, can be used if no body subscribed to the queue
+// manual delete queue, can be used if no body subscribed to the queue
+void delete_queue(const Key& key)
 
-std::shared_ptr<QueueHandler<Value>> get_handler(const Key& key) // get queue handler, can be used to produce messages directly into queue
+// get queue handler, can be used to produce messages directly into queue
+std::shared_ptr<QueueHandler<Value>> get_handler(const Key& key)
 
-void subscribe(const Key& key, IConsumer<Value>* consumer) // subscribe consumer for start processing messages
+// subscribe consumer for start processing messages
+void subscribe(const Key& key, IConsumer<Value>* consumer)
 
-void unsubscribe(IConsumer<Value>* consumer) // unsubscribe consumer to finish work with queue
+// unsubscribe consumer to finish work with queue
+void unsubscribe(IConsumer<Value>* consumer)
 ```
 
 By default queue lifetime ends with unsubscribe of consumer, it can be changed by calling QueueManager::set_manual_remove(), after that queue should be deleted manually with QueueManager::delete_queue(const Key&), it can be switched back with QueueManager::set_auto_remove.
 
 ### Producer class
-Should implement IProducer<Key, Value> interface with two produce functions:
-`void produce(const Key&, Value&&)` - used QueueManager to choose QueueHandler
+Should implement IProducer<Key, Value> interface with two produce functions:  
+`void produce(const Key&, Value&&)` - used QueueManager to choose QueueHandler  
 `void produce(std::shared_ptr<QueueHandler<Value>>, Value&&)` - used QueueHandler directly, that can be get from QueueManager
 
 ### Consumer class
-Should implement IConsumer<Value> interface with consume function:
-Value consume() - used to get next Value from the Queue, can raise an exception if Consumer not subscribed
+Should implement IConsumer<Value> interface with consume function:  
+`Value consume()` - used to get next Value from the Queue, can raise an exception if Consumer not subscribed
 
 ### Queue processing policy
 
 To define new policy:
-1) IQueuePolicyFactory<Value> should be implemented with `IQueueProcessingPolicy<Value>* build_policy(unsigned int max_size=0) const` method which returns new policy class
+1) IQueuePolicyFactory<Value> should be implemented with `IQueueProcessingPolicy<Value>* build_policy(unsigned int max_size=0) const` method which returns new policy class;
 2) IQueueProcessingPolicy<Value> should be implemented with following methods:
 ```
 void enqueue(std::queue<Value>&, Value&&)
@@ -66,4 +71,4 @@ MyPolicyFactory<std::string> factory = MyPolicyFactory<std::string>();
 QueueManager<int, std::string>::Instance().create_queue(100, 10, factory);
 ```
 
-For example you can look at QueueMultiPolicy.h, or tests.
+For example look at [QueueMultiPolicy.h](QueueMultiPolicy.h) or tests.
