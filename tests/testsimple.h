@@ -1,8 +1,10 @@
 #pragma once
 
 
+namespace multi_queue {
+
 class TestSimple {
-/* brief: Test simple functionality of queue
+/** Test simple functionality of queue
  */
 public:
     TestSimple(){}
@@ -11,3 +13,5 @@ public:
     bool run_unsubscribe();
     void assert_true(const bool);
 };
+
+}

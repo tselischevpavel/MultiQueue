@@ -1,8 +1,10 @@
 #pragma once
 
 
+namespace multi_queue {
+
 class TestExceptions {
-/* brief: Test queue exceptions
+/** Test queue exceptions
  */
 public:
     TestExceptions(){}
@@ -12,3 +14,5 @@ public:
     bool run_test_get_handler();
     void assert_true(const bool);
 };
+
+}

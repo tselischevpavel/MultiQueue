@@ -1,9 +1,16 @@
+/**
+ *  IConsumer interface, base interface for consume messages from queue
+ */
+
+
 #pragma once
 
 #include <memory>
 
 #include "QueueHandler.h"
 
+
+namespace multi_queue {
 
 template <typename Value>
 
@@ -36,3 +43,5 @@ private:
         queue_handler.reset();
     }
 };
+
+}

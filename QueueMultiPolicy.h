@@ -1,9 +1,16 @@
+/**
+ *  MultiQueue default policy, waiting for produce/consume from multiple threads
+ */
+
 #pragma once
 
 #include <mutex>
 #include <condition_variable>
 
 #include "IQueueProcessingPolicy.h"
+
+
+namespace multi_queue {
 
 template <typename Value>
 class QueueMultiPolicy : public IQueueProcessingPolicy<Value> {
@@ -39,3 +46,5 @@ private:
     std::mutex mtx;
     std::condition_variable size_check;
 };
+
+}

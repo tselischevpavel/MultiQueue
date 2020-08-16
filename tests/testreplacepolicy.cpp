@@ -10,6 +10,9 @@
 #include "../QueueManager.h"
 #include "../QueueReplacePolicyFactory.h"
 
+
+namespace multi_queue {
+
 template <typename Value>
 class ConsumerTestReplace : public IConsumer<Value>{
 
@@ -121,4 +124,6 @@ bool TestReplacePolicy::test_lock(){
     }
     QueueManager<int, std::string>::Instance().unsubscribe(consumer1);
     return results == compare;
+}
+
 }

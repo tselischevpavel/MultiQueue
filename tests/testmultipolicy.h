@@ -1,7 +1,10 @@
 #pragma once
 
+
+namespace multi_queue {
+
 class TestMultiPolicy {
-/* brief: Test queue multi thread policy
+/** Test queue multi thread policy
  */
 public:
     TestMultiPolicy(){}
@@ -10,3 +13,5 @@ public:
     bool test_lock();
     void assert_true(const bool);
 };
+
+}

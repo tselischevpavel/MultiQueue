@@ -1,9 +1,15 @@
+/**
+ *  MultiQueue replace policy, replace old messages in queue if no empty slots
+ */
+
 #pragma once
 
 #include <mutex>
-#include <condition_variable>
 
 #include "IQueueProcessingPolicy.h"
+
+
+namespace multi_queue {
 
 template <typename Value>
 class QueueReplacePolicy : public IQueueProcessingPolicy<Value> {
@@ -36,3 +42,5 @@ public:
 private:
     std::mutex mtx;
 };
+
+}

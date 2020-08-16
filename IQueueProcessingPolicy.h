@@ -1,7 +1,14 @@
+/**
+ *  IQueueProcessingPolicy interface, base interface for override operations with queue
+ */
+
 #pragma once
 
 #include <iostream> // rep
 #include <queue>
+
+
+namespace multi_queue {
 
 template <typename Value>
 class IQueueProcessingPolicy {
@@ -18,3 +25,5 @@ protected:
     bool is_empty(const std::queue<Value>& queue) const { return queue.empty(); }
     unsigned int max_size;
 };
+
+}

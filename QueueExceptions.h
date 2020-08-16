@@ -1,7 +1,14 @@
+/**
+ *  MultiQueue exceptions classes
+ */
+
 #pragma once
 
 #include <iostream>
 #include <exception>
+
+
+namespace multi_queue {
 
 class QueueExistsException : public std::exception
 {
@@ -34,3 +41,5 @@ public:
         return "Queue still using by consumer!";
     }
 };
+
+}

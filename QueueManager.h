@@ -1,3 +1,8 @@
+/**
+ *  MultiQueue manager class, mediate for work with query handlers
+ *  basic usage create/delete queues and manage consumers subscriptions
+ */
+
 #pragma once
 
 #include <unordered_map>
@@ -13,6 +18,8 @@
 
 #include "IUnsubscriptable.h"
 
+
+namespace multi_queue {
 
 template<typename Key, typename Value, typename Hash=std::hash<Key>, typename KeyEqual=std::equal_to<Key>>
 class QueueManager : public IUnsubscriptable<Value> {
@@ -114,3 +121,5 @@ private:
     std::unordered_map<IConsumer<Value>*, Key> consumers;
     std::mutex mtx;
 };
+
+}

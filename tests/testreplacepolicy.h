@@ -1,7 +1,10 @@
 #pragma once
 
+
+namespace multi_queue {
+
 class TestReplacePolicy {
-/* brief: Test queue replace policy
+/** Test queue replace policy
  */
 public:
     TestReplacePolicy(){}
@@ -10,3 +13,5 @@ public:
     bool test_lock();
     void assert_true(const bool);
 };
+
+}

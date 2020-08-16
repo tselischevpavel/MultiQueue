@@ -9,6 +9,9 @@
 #include "../IProducer.h"
 #include "../QueueManager.h"
 
+
+namespace multi_queue {
+
 template <typename Value>
 class ConsumerTestMulti : public IConsumer<Value>{
 
@@ -80,13 +83,13 @@ bool TestMultiPolicy::test_overflow(){
     std::promise<bool> res;
     auto fut = res.get_future();
 
-    ConsumerTestMulti<std::string>* consumer1 = new ConsumerTestMulti<std::string>();
+    ConsumerTestMulti<std::string> consumer1 = ConsumerTestMulti<std::string>();
     std::shared_ptr<QueueHandler<std::string>> qh = QueueManager<int, std::string>::Instance().create_queue(100, 5);
-    QueueManager<int, std::string>::Instance().subscribe(100, consumer1);
+    QueueManager<int, std::string>::Instance().subscribe(100, &consumer1);
 
     std::thread consumer_thread;
     std::thread producers_tread[10];
-    consumer_thread = std::thread(consume_for_multi_policy_test, std::move(res), consumer1);
+    consumer_thread = std::thread(consume_for_multi_policy_test, std::move(res), &consumer1);
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     for( int i=0; i<10; ++i ) {
         producers_tread[i] = std::thread(
@@ -100,7 +103,6 @@ bool TestMultiPolicy::test_overflow(){
         producers_tread[i].join();
     }
     consumer_thread.join();
-    QueueManager<int, std::string>::Instance().unsubscribe(consumer1);
 
     std::cout << "end" << std::endl;
     return fut.get();
@@ -111,13 +113,13 @@ bool TestMultiPolicy::test_lock(){
     std::promise<bool> res;
     auto fut = res.get_future();
 
-    ConsumerTestMulti<std::string>* consumer1 = new ConsumerTestMulti<std::string>();
+    ConsumerTestMulti<std::string> consumer1 = ConsumerTestMulti<std::string>();
     std::shared_ptr<QueueHandler<std::string>> qh = QueueManager<int, std::string>::Instance().create_queue(100, 3);
-    QueueManager<int, std::string>::Instance().subscribe(100, consumer1);
+    QueueManager<int, std::string>::Instance().subscribe(100, &consumer1);
 
     std::thread consumer_thread;
     std::thread producers_tread[10];
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     for( int i=0; i<10; ++i ) {
         producers_tread[i] = std::thread(
             produce_for_multi_policy_test,qh,
@@ -127,13 +129,14 @@ bool TestMultiPolicy::test_lock(){
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    consumer_thread = std::thread(consume_for_multi_policy_test, std::move(res), consumer1);
+    consumer_thread = std::thread(consume_for_multi_policy_test, std::move(res), &consumer1);
 
     for (int i=0; i<10; ++i) {
         producers_tread[i].join();
     }
     consumer_thread.join();
-    QueueManager<int, std::string>::Instance().unsubscribe(consumer1);
 
     return fut.get();
+}
+
 }

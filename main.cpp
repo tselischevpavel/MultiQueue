@@ -3,6 +3,6 @@
 
 int main()
 {
-    tests::run_all();
+    multi_queue::tests::run_all();
     return 0;
 }

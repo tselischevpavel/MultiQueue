@@ -5,6 +5,9 @@
 #include "../QueueManager.h"
 #include "../QueueExceptions.h"
 
+
+namespace multi_queue {
+
 template <typename Value>
 class Consumer : public IConsumer<Value>{
 
@@ -57,11 +60,11 @@ bool TestExceptions::run_test()
 bool TestExceptions::run_test_subscribe()
 {
     bool result = true;
-    Consumer<std::string>* consumer1 = new Consumer<std::string>();
+    Consumer<std::string> consumer1 = Consumer<std::string>();
     //case 1
     try {
         result = false;
-        QueueManager<int, std::string>::Instance().subscribe(100, consumer1);
+        QueueManager<int, std::string>::Instance().subscribe(100, &consumer1);
     } catch (const QueueNotExistsException&) {
         result = true;
     }
@@ -72,10 +75,9 @@ bool TestExceptions::run_test_subscribe()
         result = false;
         QueueManager<int, std::string>::Instance().create_queue(100);
         QueueManager<int, std::string>::Instance().create_queue(200);
-        QueueManager<int, std::string>::Instance().subscribe(100, consumer1);
-        QueueManager<int, std::string>::Instance().subscribe(200, consumer1);
+        QueueManager<int, std::string>::Instance().subscribe(100, &consumer1);
+        QueueManager<int, std::string>::Instance().subscribe(200, &consumer1);
     } catch (const QueueDuplicateConsumerException&) {
-        QueueManager<int, std::string>::Instance().unsubscribe(consumer1);
         QueueManager<int, std::string>::Instance().delete_queue(200);
         result = true;
     }
@@ -103,4 +105,6 @@ bool TestExceptions::run_test_get_handler()
         return true;
     }
     return false;
+}
+
 }

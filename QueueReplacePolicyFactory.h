@@ -1,7 +1,14 @@
+/**
+ *  MultiQueue replace policy factory, build QueueReplacePolicy
+ */
+
 #pragma once
 
 #include "IQueuePolicyFactory.h"
 #include "QueueReplacePolicy.h"
+
+
+namespace multi_queue {
 
 template<typename Value>
 class QueueReplacePolicyFactory : public IQueuePolicyFactory<Value> {
@@ -13,3 +20,5 @@ public:
         return new QueueReplacePolicy<Value>(max_size);
     }
 };
+
+}

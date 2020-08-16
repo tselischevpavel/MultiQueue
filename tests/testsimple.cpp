@@ -7,6 +7,9 @@
 #include "../IProducer.h"
 #include "../QueueManager.h"
 
+
+namespace multi_queue {
+
 template <typename Value>
 class ConsumerTestSimple : public IConsumer<Value>{
 
@@ -82,4 +85,6 @@ bool TestSimple::run_unsubscribe(){
     QueueManager<int, std::string>::Instance().create_queue(100);
     QueueManager<int, std::string>::Instance().delete_queue(100);
     return result;
+}
+
 }

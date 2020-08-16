@@ -1,9 +1,14 @@
 #pragma once
 
+#include <iostream>
+
 #include "testsimple.h"
 #include "testexceptions.h"
 #include "testmultipolicy.h"
 #include "testreplacepolicy.h"
+
+
+namespace multi_queue {
 
 namespace tests {
 
@@ -15,5 +20,7 @@ namespace tests {
         passed += TestReplacePolicy().run_test();
         std::cout << "Passed: " << passed << " from 4 Tests" << std::endl;
     }
+
+}
 
 }

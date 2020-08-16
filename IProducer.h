@@ -1,9 +1,16 @@
+/**
+ *  IProducer interface, base interface for product new messages into queue
+ */
+
 #pragma once
 
 #include <memory>
 
 #include "QueueHandler.h"
 #include "QueueManager.h"
+
+
+namespace multi_queue {
 
 template <typename Key, typename Value>
 class IProducer {
@@ -23,3 +30,5 @@ public:
 
 template <typename Key, typename Value>
 IProducer<Key, Value>::~IProducer(){};
+
+}

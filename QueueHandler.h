@@ -1,3 +1,7 @@
+/**
+ *  MultiQueue handler class, holding query and using policy to make operations on it
+ */
+
 #pragma once
 
 #include <queue>
@@ -5,6 +9,9 @@
 
 #include "IQueueProcessingPolicy.h"
 #include "QueueMultiPolicy.h"
+
+
+namespace multi_queue {
 
 template<typename ValueM>
 class IUnsubscriptable;
@@ -49,3 +56,5 @@ private:
     std::queue<Value> queue;
     IQueueProcessingPolicy<Value>* processing_policy;
 };
+
+}
