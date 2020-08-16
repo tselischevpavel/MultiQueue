@@ -1,6 +1,18 @@
 # MultiQueue
 Library that implements simple queue functionality for single consumer and multiple producers in multi-threading environment.
 
+## Build
+with cmake:
+```
+cmake .
+cmake --build .
+```
+tests can be run in docker
+```
+docker build dockerfile -t mqbuild
+docker run -it mqbuild
+```
+
 ## Basic usage
 All you need just add a new queue, after you can start producing messages into it with producer and take them out with consumer.
 For example:
