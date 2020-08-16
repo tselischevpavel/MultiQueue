@@ -12,6 +12,7 @@ add_executable(
     IProducer.h
     IQueueProcessingPolicy.h
     IQueuePolicyFactory.h
+    IUnsubscriptable.h
 
     QueueManager.h
     QueueHandler.h
@@ -28,4 +29,6 @@ add_executable(
     tests/testexceptions.h
     tests/testmultipolicy.cpp
     tests/testmultipolicy.h
+    tests/testreplacepolicy.cpp
+    tests/testreplacepolicy.h
 )

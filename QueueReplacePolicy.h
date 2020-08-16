@@ -18,24 +18,21 @@ public:
     }
 
     void enqueue(std::queue<Value>& queue, Value&& val){
-        std::unique_lock<std::mutex> lock(mtx);
-        size_check.wait(lock, [this, &queue](){return !this->max_size || (queue.size() < this->max_size);});
+        std::lock_guard<std::mutex> lock(mtx);
+        if( this->max_size && queue.size() == this->max_size )
+            queue.pop();
         queue.emplace(std::forward<Value>(val));
-        lock.unlock();
-        size_check.notify_all();
     }
 
     Value dequeue(std::queue<Value>& queue){
-        std::unique_lock<std::mutex> lock(mtx);
-        size_check.wait(lock, [&queue](){return queue.size() > 0;});
+        // undefined behavior from queue.pop() from empty queue
+        // check size not empty, we have single consumer
+        std::lock_guard<std::mutex> lock(mtx);
         Value val = queue.front();
         queue.pop();
-        lock.unlock();
-        size_check.notify_all();
         return val;
     }
 
 private:
     std::mutex mtx;
-    std::condition_variable size_check;
 };

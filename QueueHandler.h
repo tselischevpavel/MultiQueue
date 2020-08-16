@@ -6,12 +6,19 @@
 #include "IQueueProcessingPolicy.h"
 #include "QueueMultiPolicy.h"
 
+template<typename ValueM>
+class IUnsubscriptable;
+
+template<typename ValueM>
+class IConsumer;
+
 template<typename Value>
 class QueueHandler{
-typedef typename Value::size_type size_type;
+    typedef typename Value::size_type size_type;
 
 public:
-    QueueHandler(IQueueProcessingPolicy<Value>* policy) {
+    QueueHandler(IQueueProcessingPolicy<Value>* policy, IUnsubscriptable<Value>* qm) {
+        parent = qm;
         processing_policy = policy;
         queue = std::queue<Value>();
     }
@@ -33,7 +40,12 @@ public:
         processing_policy->enqueue(queue, std::forward<Value>(val));
     }
 
+    void unsubscribe(IConsumer<Value>* consumer){
+        parent->unsubscribe(consumer);
+    }
+
 private:
+    IUnsubscriptable<Value>* parent;
     std::queue<Value> queue;
     IQueueProcessingPolicy<Value>* processing_policy;
 };

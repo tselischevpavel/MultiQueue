@@ -7,8 +7,8 @@
 #include "../IProducer.h"
 #include "../QueueManager.h"
 
-template <typename Key, typename Value>
-class ConsumerTestSimple : public IConsumer<Key, Value>{
+template <typename Value>
+class ConsumerTestSimple : public IConsumer<Value>{
 
 public:
     ConsumerTestSimple(){}
@@ -24,12 +24,12 @@ public:
 };
 
 template <typename Key, typename Value>
-class Producer : public IProducer<Key, Value>{
+class ProducerTestSimple : public IProducer<Key, Value>{
 
 public:
-    Producer(){}
+    ProducerTestSimple(){}
 
-    virtual ~Producer(){}
+    virtual ~ProducerTestSimple(){}
 };
 
 void TestSimple::assert_true(const bool result){
@@ -39,29 +39,47 @@ void TestSimple::assert_true(const bool result){
         std::cout << "TestSimple Failed" << std::endl;
 }
 
-void TestSimple::run_test(){
+bool TestSimple::run_test(){
+    bool result = run_simple();
+    result &= run_unsubscribe();
+    assert_true(result);
+    return result;
+}
+
+
+bool TestSimple::run_simple(){
     bool result = true;
 
-    ConsumerTestSimple<int, std::string>* consumer1 = new ConsumerTestSimple<int, std::string>();
-    Producer<int, std::string>* producer1 = new Producer<int, std::string>();
+    ConsumerTestSimple<std::string> consumer1 = ConsumerTestSimple<std::string>();
+    ProducerTestSimple<int, std::string> producer1 = ProducerTestSimple<int, std::string>();
 
     std::shared_ptr<QueueHandler<std::string>> qh = QueueManager<int, std::string>::Instance().create_queue(100);
-    QueueManager<int, std::string>::Instance().subscribe(100, consumer1);
+    QueueManager<int, std::string>::Instance().subscribe(100, &consumer1);
 
-    producer1->produce(100, "1");
-    producer1->produce(100, "2");
-    producer1->produce(100, "3");
-    producer1->produce(qh, "4");
+    producer1.produce(100, "1");
+    producer1.produce(100, "2");
+    producer1.produce(100, "3");
+    producer1.produce(qh, "4");
 
     result &= qh->size() == 4;
 
-    consumer1->consume();
-    consumer1->consume();
-    consumer1->consume();
-    consumer1->consume();
+    consumer1.consume();
+    consumer1.consume();
+    consumer1.consume();
+    consumer1.consume();
 
     result &= qh->size() == 0;
-    QueueManager<int, std::string>::Instance().unsubscribe(consumer1);
+    return result;
+}
 
-    assert_true(result);
+bool TestSimple::run_unsubscribe(){
+    bool result = true;
+    ConsumerTestSimple<std::string>* consumer1 = new ConsumerTestSimple<std::string>();
+    QueueManager<int, std::string>::Instance().create_queue(100);
+    QueueManager<int, std::string>::Instance().subscribe(100, consumer1);
+    delete consumer1; // queue with key was deleted
+
+    QueueManager<int, std::string>::Instance().create_queue(100);
+    QueueManager<int, std::string>::Instance().delete_queue(100);
+    return result;
 }

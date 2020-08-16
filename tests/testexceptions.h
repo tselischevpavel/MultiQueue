@@ -2,9 +2,11 @@
 
 
 class TestExceptions {
+/* brief: Test queue exceptions
+ */
 public:
     TestExceptions(){}
-    void run_test();
+    bool run_test();
     bool run_test_subscribe();
     bool run_test_create_duplicate();
     bool run_test_get_handler();

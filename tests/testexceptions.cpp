@@ -5,8 +5,8 @@
 #include "../QueueManager.h"
 #include "../QueueExceptions.h"
 
-template <typename Key, typename Value>
-class Consumer : public IConsumer<Key, Value>{
+template <typename Value>
+class Consumer : public IConsumer<Value>{
 
 public:
     Consumer(){}
@@ -35,7 +35,7 @@ void TestExceptions::assert_true(const bool result){
         std::cout << "TestExceptions Failed" << std::endl;
 }
 
-void TestExceptions::run_test()
+bool TestExceptions::run_test()
 {
     bool result = true;
     if( !run_test_subscribe() ){
@@ -48,15 +48,16 @@ void TestExceptions::run_test()
     }
     if( !run_test_get_handler() ){
         std::cout << "run_test_get_handler - failed" << std::endl;
-    result = false;
+        result = false;
     }
     assert_true(result);
+    return result;
 }
 
 bool TestExceptions::run_test_subscribe()
 {
     bool result = true;
-    Consumer<int, std::string>* consumer1 = new Consumer<int, std::string>();
+    Consumer<std::string>* consumer1 = new Consumer<std::string>();
     //case 1
     try {
         result = false;
@@ -75,8 +76,7 @@ bool TestExceptions::run_test_subscribe()
         QueueManager<int, std::string>::Instance().subscribe(200, consumer1);
     } catch (const QueueDuplicateConsumerException&) {
         QueueManager<int, std::string>::Instance().unsubscribe(consumer1);
-        QueueManager<int, std::string>::Instance().subscribe(200, consumer1);
-        QueueManager<int, std::string>::Instance().unsubscribe(consumer1);
+        QueueManager<int, std::string>::Instance().delete_queue(200);
         result = true;
     }
     return result;
@@ -84,14 +84,12 @@ bool TestExceptions::run_test_subscribe()
 
 bool TestExceptions::run_test_create_duplicate()
 {
-    Consumer<int, std::string>* consumer1 = new Consumer<int, std::string>();
     try {
         QueueManager<int, std::string>::Instance().create_queue(100);
         QueueManager<int, std::string>::Instance().create_queue(100);
     } catch (const QueueExistsException&) {
         // removing queue
-        QueueManager<int, std::string>::Instance().subscribe(100, consumer1);
-        QueueManager<int, std::string>::Instance().unsubscribe(consumer1);
+        QueueManager<int, std::string>::Instance().delete_queue(100);
         return true;
     }
     return false;

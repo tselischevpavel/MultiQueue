@@ -1,10 +1,10 @@
 #pragma once
 
-class TestMultiPolicy {
-/* brief: Test queue multi thread policy
+class TestReplacePolicy {
+/* brief: Test queue replace policy
  */
 public:
-    TestMultiPolicy(){}
+    TestReplacePolicy(){}
     bool run_test();
     bool test_overflow();
     bool test_lock();

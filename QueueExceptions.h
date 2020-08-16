@@ -26,3 +26,11 @@ public:
         return "Consumer already subscribed to another queue!";
     }
 };
+
+class QueueRunningException : public std::exception
+{
+public:
+    const char* what () const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT {
+        return "Queue still using by consumer!";
+    }
+};
